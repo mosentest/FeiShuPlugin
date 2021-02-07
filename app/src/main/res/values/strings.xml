@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">飞书红包插件</string>
+    <string name="accessDescription">飞书红包组手，此功能只针对飞书发的红包点击事件</string>
+    <string name="targetPackageName">com.ss.android.lark</string>
 </resources>

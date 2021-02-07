@@ -35,7 +35,6 @@
                 android:layout_height="wrap_content"
                 android:text="辅助功能（关闭）" />
 
-            <!--com.ss.android.lark-->
             <Button
                 android:id="@+id/btnKeep"
                 android:layout_width="match_parent"

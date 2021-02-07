@@ -9,6 +9,9 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import cn.zipper.feishu.plugin.service.MyAccessibilityService
+import cn.zipper.feishu.plugin.service.MyNotificationListenerService
+import cn.zipper.feishu.plugin.utils.AccessibilityUtils
 import cn.zipper.feishu.plugin.utils.ImageUtils
 import cn.zipper.feishu.plugin.utils.NotificationListenerUtils
 import cn.zipper.feishu.plugin.utils.SPUtil
@@ -28,10 +31,29 @@ class MainActivity : AppCompatActivity() {
                 .setMessage("打开通知栏权限，是为了监听飞书的红包消息")
                 .setPositiveButton("我知道了") { p0, p1 ->
 
-                    NotificationListenerUtils.checkService(this)
+                    NotificationListenerUtils.gotoNotificationAccessSetting(this)
 
                     val enabled = NotificationListenerUtils.isNotificationListenersEnabled(this)
                     btnNotify.text = if (enabled) "通知栏权限（开启）" else "通知栏权限（关闭）"
+                }
+                .setCancelable(false)
+                .create()
+            dialog.setCanceledOnTouchOutside(false)
+            dialog.show()
+        }
+        btnAccess.setOnClickListener {
+            val dialog = AlertDialog
+                .Builder(this)
+                .setMessage("打开辅助功能，是为了点击飞书的红包消息")
+                .setPositiveButton("我知道了") { p0, p1 ->
+
+                    AccessibilityUtils.jumpSystemSetting(this)
+
+                    val hasServicePermission = AccessibilityUtils.hasServicePermission(
+                        this,
+                        MyAccessibilityService::class.java
+                    )
+                    btnAccess.text = if (hasServicePermission) "辅助功能（开启）" else "辅助功能（关闭）"
                 }
                 .setCancelable(false)
                 .create()
@@ -73,10 +95,24 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
         val enabled = NotificationListenerUtils.isNotificationListenersEnabled(this)
+        if (enabled) {
+            NotificationListenerUtils.toggleNotificationListenerService(
+                this,
+                MyNotificationListenerService::class.java
+            )
+        }
         btnNotify.text = if (enabled) "通知栏权限（开启）" else "通知栏权限（关闭）"
+
+        val hasServicePermission = AccessibilityUtils.hasServicePermission(
+            this,
+            MyAccessibilityService::class.java
+        )
+        btnAccess.text = if (hasServicePermission) "辅助功能（开启）" else "辅助功能（关闭）"
 
         val is_feishu_keep = SPUtil.get(this, SPUtil.FILE_NAME, "feishu_keep", false) as Boolean
         btnKeep.text = if (is_feishu_keep) "增强飞书保活（开启）" else "增强飞书保活（关闭）"
+
+
     }
 
     @NeedsPermission(

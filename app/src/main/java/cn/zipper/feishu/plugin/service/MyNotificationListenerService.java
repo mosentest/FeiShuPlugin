@@ -27,6 +27,11 @@ public class MyNotificationListenerService extends NotificationListenerService {
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_NOT_STICKY;
+    }
+
+    @Override
     public void onListenerConnected() {
         Log.i("AAA", "onListenerConnected:");
 
@@ -56,8 +61,11 @@ public class MyNotificationListenerService extends NotificationListenerService {
             }
         } else if ("com.tencent.mm".equals(packageName)) {
             //给自己手机做保活微信
-            startApp(sbn);
-            defaultMediaPlayer(this);
+            boolean isKeep = (boolean) SPUtil.get(this, SPUtil.FILE_NAME, "feishu_keep", false);
+            if (isKeep) {
+                startApp(sbn);
+                defaultMediaPlayer(this);
+            }
         } else {
             boolean isKeep = (boolean) SPUtil.get(this, SPUtil.FILE_NAME, "feishu_keep", false);
             if (isKeep) {
