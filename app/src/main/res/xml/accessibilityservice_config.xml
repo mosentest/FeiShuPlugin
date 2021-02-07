@@ -16,5 +16,5 @@
     android:canRequestFilterKeyEvents="true"
     android:canRetrieveWindowContent="true"
     android:description="@string/accessDescription"
-    android:notificationTimeout="3000"
+    android:notificationTimeout="1000"
     android:packageNames="@string/targetPackageName" />

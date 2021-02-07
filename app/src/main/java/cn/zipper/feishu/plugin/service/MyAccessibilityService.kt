@@ -5,7 +5,10 @@ import android.app.Service
 import android.content.Intent
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityNodeInfo
 import cn.zipper.feishu.plugin.BuildConfig
+import cn.zipper.feishu.plugin.utils.ObjAccessibility
+import java.util.*
 
 
 class MyAccessibilityService : AccessibilityService() {
@@ -27,6 +30,9 @@ class MyAccessibilityService : AccessibilityService() {
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) {
+            return
+        }
+        if (!"com.ss.android.lark.chatwindow.ChatWindowActivity".equals(event.className)) {
             return
         }
         if (BuildConfig.DEBUG) {
@@ -95,8 +101,11 @@ class MyAccessibilityService : AccessibilityService() {
         }
     }
 
-    private fun feishuhongbao(event: AccessibilityEvent?){
-
+    private fun feishuhongbao(event: AccessibilityEvent?) {
+        val findNodesByText = ObjAccessibility.findNodesByText(rootInActiveWindow, "领取红包")
+        if (findNodesByText != null && findNodesByText.isNotEmpty()) {
+            val last = findNodesByText.last()
+            ObjAccessibility.performClick(Arrays.asList(last), true)
+        }
     }
-
 }
