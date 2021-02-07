@@ -20,6 +20,8 @@ public class MyNotificationListenerService extends NotificationListenerService {
 
     private final static String pkg_feishu = "com.ss.android.lark";
 
+    private long time;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -69,10 +71,13 @@ public class MyNotificationListenerService extends NotificationListenerService {
         } else {
             boolean isKeep = (boolean) SPUtil.get(this, SPUtil.FILE_NAME, "feishu_keep", false);
             if (isKeep) {
-                Intent launchIntentForPackage = getPackageManager().getLaunchIntentForPackage(pkg_feishu);
-                if (launchIntentForPackage != null) {
-                    launchIntentForPackage.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(launchIntentForPackage);
+                if (System.currentTimeMillis() - time > 5 * 60 * 1000L) {
+                    time = System.currentTimeMillis();
+                    Intent launchIntentForPackage = getPackageManager().getLaunchIntentForPackage(pkg_feishu);
+                    if (launchIntentForPackage != null) {
+                        launchIntentForPackage.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(launchIntentForPackage);
+                    }
                 }
             }
         }
