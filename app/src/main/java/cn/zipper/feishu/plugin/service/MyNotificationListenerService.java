@@ -58,9 +58,6 @@ public class MyNotificationListenerService extends NotificationListenerService {
             if (content != null && content.contains("[红包]")) {
                 startApp(sbn);
                 defaultMediaPlayer(this);
-            } else {
-                startApp(sbn);
-                defaultMediaPlayer(this);
             }
         } else if ("com.tencent.mm".equals(packageName)) {
             //给自己手机做保活微信
